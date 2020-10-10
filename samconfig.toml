@@ -8,4 +8,4 @@ s3_prefix = "wisdom-http-api"
 region = "ap-northeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "StageName=\"v0\" UserPoolId=\"ap-northeast-1_Cm49G1vFS\" ContentGitRepositoryURL=\"git@github.com:KoharaKazuya/wisdom-content.git\""
+parameter_overrides = "StageName=\"v0\" ContentGitRepositoryURL=\"git@github.com:KoharaKazuya/wisdom-content.git\""

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -31,10 +32,22 @@ func newRouter() *chi.Mux {
 
 func postComment(w http.ResponseWriter, r *http.Request) {
 	// Read header
-	cognitoUsername := r.Header.Get("wisdom-cognito-username")
-	if cognitoUsername == "" {
-		log.Print("[ERROR] lack of header wisdom-cognito-username")
-		w.WriteHeader(500)
+	userName, err := url.QueryUnescape(r.Header.Get("wisdom-user-name"))
+	if err != nil {
+		userName = ""
+	}
+	if userName == "" {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"title":"missing required header","detail":"wisdom-user-name header required and it must be percent encoded value"}`))
+		return
+	}
+	userEmail, err := url.QueryUnescape(r.Header.Get("wisdom-user-email"))
+	if err != nil {
+		userEmail = ""
+	}
+	if userEmail == "" {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"title":"missing required header","detail":"wisdom-user-email header required and it must be percent encoded value"}`))
 		return
 	}
 
@@ -68,15 +81,8 @@ func postComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch user data
-	cognitoUser, err := newCongnitoUserFromUsername(cognitoUsername)
-	if err != nil {
-		log.Printf("[ERROR] fetch user data: %v", err)
-		w.WriteHeader(500)
-		return
-	}
-	cReq.AuthorName = cognitoUser.name
-	cReq.AuthorEmail = cognitoUser.email
+	cReq.AuthorName = userName
+	cReq.AuthorEmail = userEmail
 
 	// construct env
 	ssmSvc := ssm.New(awsSession)

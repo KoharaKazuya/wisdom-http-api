@@ -1,8 +1,5 @@
 このコンポーネントは信頼できる認証機能付きプロキシのバックエンドとして動かすことを想定する。
-そのため、アクセスされた時点で無条件に識別情報 (= `wisdom-cognito-username` に設定されたメールアドレス) を信用し、認可機能は持たない。
-
-ユーザーデータの提供元として Cognito User Pool に依存しているため、このスタックのパラメーターとして Cognito User Pool ID を要求する。このため `wisdom-cloud` とは相互依存となっており、作成の順序の問題が発生する。
-`wisdom-http-api` (Cognito User Pool ダミードメインの使用、HTTP API ドメインの発行) → `wisdom-cloud` (HTTP API ドメインの使用、Cognito User Pool ドメインの発行) → `wisdom-http-api` (Cognito User Pool ドメインの使用) の順番で設定すると解決できる。
+そのため、アクセスされた時点で無条件にユーザー情報 (= `wisdom-user-name`, `wisdom-user-email` ヘッダー) を信用し、認可機能は持たない。
 
 **前提**
 
