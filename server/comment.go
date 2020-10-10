@@ -78,7 +78,7 @@ func postCommentInner(ctx context.Context, r CreateCommentRequest, env Env) (Com
 	}
 
 	// create comment file
-	file, err := createCommentFile(ctx, comment, filepath.Join(dir, "comments"))
+	file, err := createCommentFile(ctx, comment, filepath.Join(dir, "comments", r.PostID))
 	if err != nil {
 		return Comment{}, xerrors.Errorf("create comment file: %v", err)
 	}
@@ -141,7 +141,12 @@ func createCommentFileContent(r CreateCommentRequest, now time.Time) string {
 }
 
 func createCommentFile(ctx context.Context, comment Comment, dir string) (string, error) {
-	path := filepath.Join(dir, comment.ID)
+	err := os.MkdirAll(dir, 0755)
+	if err != nil {
+		return "", xerrors.Errorf("create comment file base directory: %v", err)
+	}
+
+	path := filepath.Join(dir, comment.ID+".md")
 
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0644)
 	if err != nil {
