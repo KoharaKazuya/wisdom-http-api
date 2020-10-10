@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "wisdom-http-api"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1r1ama9gewksx"
+s3_prefix = "wisdom-http-api"
+region = "ap-northeast-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "StageName=\"v0\" UserPoolId=\"ap-northeast-1_Cm49G1vFS\" ContentGitRepositoryURL=\"git@github.com:KoharaKazuya/wisdom-content.git\""
