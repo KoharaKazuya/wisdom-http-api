@@ -25,8 +25,11 @@ type CreateCommentRequest struct {
 }
 
 type Comment struct {
-	ID      string `json:"id"`
-	Content string `json:"content"`
+	ID          string    `json:"id"`
+	Date        time.Time `json:"date"`
+	AuthorName  string    `json:"author_name"`
+	AuthorEmail string    `json:"author_email"`
+	Content     string    `json:"content"`
 }
 
 type Env struct {
@@ -37,8 +40,11 @@ func postCommentInner(ctx context.Context, r CreateCommentRequest, env Env) (Com
 	// create comment
 	now := time.Now()
 	comment := Comment{
-		ID:      strconv.FormatInt(now.Unix(), 10) + "-" + RandStringBytes(8),
-		Content: createCommentFileContent(r, now),
+		ID:          strconv.FormatInt(now.Unix(), 10) + "-" + RandStringBytes(8),
+		Date:        now,
+		AuthorName:  r.AuthorName,
+		AuthorEmail: r.AuthorEmail,
+		Content:     createCommentFileContent(r, now),
 	}
 
 	// create temporary directory
